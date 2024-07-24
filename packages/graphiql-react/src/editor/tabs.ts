@@ -47,6 +47,7 @@ export type TabState = TabDefinition & {
    * The contents of the response editor of this tab.
    */
   response: string | null;
+  className?: string;
 };
 
 /**
@@ -286,12 +287,13 @@ export function useSetEditorValues({
 }
 
 export function createTab({
+  id,
   query = null,
   variables = null,
   headers = null,
-}: Partial<TabDefinition> = {}): TabState {
+}: Partial<TabDefinition & Pick<TabState, 'id'>>): TabState {
   return {
-    id: guid(),
+    id: id || guid(),
     hash: hashFromTabContents({ query, variables, headers }),
     title: (query && fuzzyExtractOperationName(query)) || DEFAULT_TITLE,
     query,

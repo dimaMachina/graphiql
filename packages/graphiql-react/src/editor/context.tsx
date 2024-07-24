@@ -49,7 +49,7 @@ export type EditorContextType = TabsState & {
   /**
    * Add a new tab.
    */
-  addTab(): void;
+  addTab(tabState?: Pick<TabState, 'id' | 'query' | 'variables' | 'headers'>): void;
   /**
    * Switch to a different tab.
    * @param index The index of the tab that should be switched to.
@@ -368,12 +368,12 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   });
   const { onTabChange, defaultHeaders, children } = props;
 
-  const addTab = useCallback<EditorContextType['addTab']>(() => {
+  const addTab = useCallback<EditorContextType['addTab']>((_tabState) => {
     setTabState(current => {
       // Make sure the current tab stores the latest values
       const updatedValues = synchronizeActiveTabValues(current);
       const updated = {
-        tabs: [...updatedValues.tabs, createTab({ headers: defaultHeaders })],
+        tabs: [...updatedValues.tabs, createTab({ ..._tabState, headers: defaultHeaders })],
         activeTabIndex: updatedValues.tabs.length,
       };
       storeTabs(updated);
