@@ -23,15 +23,12 @@ import {
   ButtonGroup,
   ChevronDownIcon,
   ChevronUpIcon,
-  CopyIcon,
   Dialog,
   ExecuteButton,
   GraphiQLProvider,
   GraphiQLProviderProps,
   HeaderEditor,
   KeyboardShortcutIcon,
-  MergeIcon,
-  PlusIcon,
   PrettifyIcon,
   QueryEditor,
   ReloadIcon,
@@ -43,12 +40,10 @@ import {
   ToolbarButton,
   Tooltip,
   UnStyledButton,
-  useCopyQuery,
   useDragResize,
   useEditorContext,
   useExecutionContext,
   UseHeaderEditorArgs,
-  useMergeQuery,
   usePluginContext,
   usePrettifyEditors,
   UseQueryEditorArgs,
@@ -248,8 +243,6 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
     [props.forcedTheme],
   );
 
-  const copy = useCopyQuery({ onCopyQuery: props.onCopyQuery });
-  const merge = useMergeQuery();
   const prettify = usePrettifyEditors();
 
   const { theme, setTheme } = useTheme();
@@ -335,22 +328,13 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
     isChildComponentType(child, GraphiQL.Toolbar),
   ) || (
     <>
-      <ToolbarButton onClick={prettify} label="Prettify query (Shift-Ctrl-P)">
-        <PrettifyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-      </ToolbarButton>
-      <ToolbarButton
-        onClick={merge}
-        label="Merge fragments into query (Shift-Ctrl-M)"
-      >
-        <MergeIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-      </ToolbarButton>
-      <ToolbarButton onClick={copy} label="Copy query (Shift-Ctrl-C)">
-        <CopyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-      </ToolbarButton>
       {props.toolbar?.additionalContent}
       {props.toolbar?.additionalComponent && (
         <props.toolbar.additionalComponent />
       )}
+      <ToolbarButton onClick={prettify} label="Prettify query (Shift-Ctrl-P)">
+        <PrettifyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
+      </ToolbarButton>
     </>
   );
 
@@ -394,7 +378,6 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
     [setTheme],
   );
 
-  const handleAddTab = editorContext.addTab;
   const handleRefetchSchema = schemaContext.introspect;
   const handleReorder = editorContext.moveTab;
 
@@ -557,6 +540,7 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
                           key={tab.id}
                           value={tab}
                           isActive={index === editorContext.activeTabIndex}
+                          className={tab.className}
                         >
                           <Tab.Button
                             aria-controls="graphiql-session"
@@ -580,16 +564,6 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
                       ))}
                     </Tabs>
                   )}
-                  <Tooltip label="Add tab">
-                    <UnStyledButton
-                      type="button"
-                      className="graphiql-tab-add"
-                      onClick={handleAddTab}
-                      aria-label="Add tab"
-                    >
-                      <PlusIcon aria-hidden="true" />
-                    </UnStyledButton>
-                  </Tooltip>
                 </>
               )}
               {logo}
