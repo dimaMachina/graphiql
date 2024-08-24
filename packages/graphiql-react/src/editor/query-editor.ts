@@ -344,10 +344,7 @@ export function useQueryEditor(
         const currentOperationName = editorInstance.operationName;
         const operationFacts = getAndUpdateOperationFacts(editorInstance);
         if (operationFacts?.operationName !== undefined) {
-          storage.set(
-            STORAGE_KEY_OPERATION_NAME,
-            operationFacts.operationName,
-          );
+          storage.set(STORAGE_KEY_OPERATION_NAME, operationFacts.operationName);
         }
 
         // Invoke callback props only after the operation facts have been updated

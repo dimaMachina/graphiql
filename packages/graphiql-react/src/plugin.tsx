@@ -9,7 +9,7 @@ import {
 import { DocExplorer, useExplorerContext } from './explorer';
 import { History, useHistoryContext } from './history';
 import { DocsFilledIcon, DocsIcon, HistoryIcon } from './icons';
-import { useStorageContext } from './storage';
+import { useStorage } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
 
 export type GraphiQLPlugin = {
@@ -93,7 +93,7 @@ export type PluginContextProviderProps = {
 };
 
 export function PluginContextProvider(props: PluginContextProviderProps) {
-  const storage = useStorageContext();
+  const storage = useStorage();
   const explorerContext = useExplorerContext();
   const historyContext = useHistoryContext();
 
@@ -131,7 +131,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
 
   const [visiblePlugin, internalSetVisiblePlugin] =
     useState<GraphiQLPlugin | null>(() => {
-      const storedValue = storage?.get(STORAGE_KEY);
+      const storedValue = storage.get(STORAGE_KEY);
       const pluginForStoredValue = plugins.find(
         plugin => plugin.title === storedValue,
       );
@@ -139,7 +139,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
         return pluginForStoredValue;
       }
       if (storedValue) {
-        storage?.set(STORAGE_KEY, '');
+        storage.set(STORAGE_KEY, '');
       }
 
       if (!props.visiblePlugin) {
