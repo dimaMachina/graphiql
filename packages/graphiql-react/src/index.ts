@@ -64,11 +64,7 @@ export {
   SchemaContextProvider,
   useSchemaContext,
 } from './schema';
-export {
-  StorageContext,
-  StorageContextProvider,
-  useStorageContext,
-} from './storage';
+export { StorageContextProvider, useStorage } from './storage';
 export { useTheme } from './theme';
 export { useDragResize } from './utility/resize';
 export { isMacOs } from './utility/is-macos';
@@ -112,8 +108,5 @@ export type {
 } from './plugin';
 export type { GraphiQLProviderProps } from './provider';
 export type { SchemaContextProviderProps, SchemaContextType } from './schema';
-export type {
-  StorageContextProviderProps,
-  StorageContextType,
-} from './storage';
+export type { StorageContextProviderProps } from './storage';
 export type { Theme } from './theme';
