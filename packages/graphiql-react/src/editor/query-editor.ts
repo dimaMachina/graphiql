@@ -23,7 +23,7 @@ import { useExplorerContext } from '../explorer';
 import { markdown } from '../markdown';
 import { DOC_EXPLORER_PLUGIN, usePluginContext } from '../plugin';
 import { useSchemaContext } from '../schema';
-import { useStorageContext } from '../storage';
+import { useStorage } from '../storage';
 import debounce from '../utility/debounce';
 import {
   commonKeys,
@@ -99,7 +99,7 @@ export function useQueryEditor(
     caller: caller || useQueryEditor,
   });
   const executionContext = useExecutionContext();
-  const storage = useStorageContext();
+  const storage = useStorage();
   const explorer = useExplorerContext();
   const plugin = usePluginContext();
   const copy = useCopyQuery({ caller: caller || useQueryEditor, onCopyQuery });
@@ -339,12 +339,12 @@ export function useQueryEditor(
       100,
       (editorInstance: CodeMirrorEditorWithOperationFacts) => {
         const query = editorInstance.getValue();
-        storage?.set(STORAGE_KEY_QUERY, query);
+        storage.set(STORAGE_KEY_QUERY, query);
 
         const currentOperationName = editorInstance.operationName;
         const operationFacts = getAndUpdateOperationFacts(editorInstance);
         if (operationFacts?.operationName !== undefined) {
-          storage?.set(
+          storage.set(
             STORAGE_KEY_OPERATION_NAME,
             operationFacts.operationName,
           );
