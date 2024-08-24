@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-import { useStorageContext } from '../storage';
+import { useStorage } from '../storage';
 import debounce from './debounce';
 
 type ResizableElement = 'first' | 'second';
@@ -58,13 +58,13 @@ export function useDragResize({
   sizeThresholdSecond = 100,
   storageKey,
 }: UseDragResizeArgs) {
-  const storage = useStorageContext();
+  const storage = useStorage();
 
   const store = useMemo(
     () =>
       debounce(500, (value: string) => {
         if (storageKey) {
-          storage?.set(storageKey, value);
+          storage.set(storageKey, value);
         }
       }),
     [storage, storageKey],
@@ -72,7 +72,7 @@ export function useDragResize({
 
   const [hiddenElement, setHiddenElement] = useState<ResizableElement | null>(
     () => {
-      const storedValue = storageKey && storage?.get(storageKey);
+      const storedValue = storageKey && storage.get(storageKey);
       if (storedValue === HIDE_FIRST || initiallyHidden === 'first') {
         return 'first';
       }
@@ -104,7 +104,7 @@ export function useDragResize({
    */
   useLayoutEffect(() => {
     const storedValue =
-      (storageKey && storage?.get(storageKey)) || defaultFlexRef.current;
+      (storageKey && storage.get(storageKey)) || defaultFlexRef.current;
 
     if (firstRef.current) {
       firstRef.current.style.display = 'flex';
