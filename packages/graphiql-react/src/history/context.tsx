@@ -1,7 +1,7 @@
 import { HistoryStore, QueryStoreItem, StorageAPI } from '@graphiql/toolkit';
 import { ReactNode, useMemo, useState } from 'react';
 
-import { useStorageContext } from '../storage';
+import { useStorage } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
 
 export type HistoryContextType = {
@@ -91,7 +91,7 @@ export function HistoryContextProvider({
   maxHistoryLength = DEFAULT_HISTORY_LENGTH,
   children,
 }: HistoryContextProviderProps) {
-  const storage = useStorageContext();
+  const storage = useStorage();
   const [historyStore] = useState(
     () =>
       // Fall back to a noop storage when the StorageContext is empty
