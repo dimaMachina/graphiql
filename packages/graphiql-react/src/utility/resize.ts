@@ -165,7 +165,7 @@ export function useDragResize({
       element.style.position = '';
       element.style.left = '';
 
-      if (storage && storageKey) {
+      if (storageKey) {
         const storedValue = storage.get(storageKey);
         if (
           firstRef.current &&
