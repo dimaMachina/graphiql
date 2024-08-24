@@ -1,12 +1,10 @@
 import { Storage, StorageAPI } from '@graphiql/toolkit';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useContext, createContext, useState } from 'react';
+import { createStore, StoreApi, useStore } from 'zustand';
 
-import { createContextHook, createNullableContext } from './utility/context';
-
-export type StorageContextType = StorageAPI;
-
-export const StorageContext =
-  createNullableContext<StorageContextType>('StorageContext');
+export const StorageContext = createContext<StoreApi<StorageState> | null>(
+  null,
+);
 
 export type StorageContextProviderProps = {
   children: ReactNode;
@@ -19,23 +17,31 @@ export type StorageContextProviderProps = {
   storage?: Storage;
 };
 
-export function StorageContextProvider(props: StorageContextProviderProps) {
-  const isInitialRender = useRef(true);
-  const [storage, setStorage] = useState(() => new StorageAPI(props.storage));
+type StorageState = {
+  storage: StorageAPI;
+};
 
-  useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-    } else {
-      setStorage(new StorageAPI(props.storage));
-    }
-  }, [props.storage]);
+export function StorageContextProvider({
+  children,
+  storage,
+}: StorageContextProviderProps) {
+  const [store] = useState(() =>
+    createStore<StorageState>(() => ({
+      storage: new StorageAPI(storage),
+    })),
+  );
 
   return (
-    <StorageContext.Provider value={storage}>
-      {props.children}
-    </StorageContext.Provider>
+    <StorageContext.Provider value={store}>{children}</StorageContext.Provider>
   );
 }
 
-export const useStorageContext = createContextHook(StorageContext);
+function useStorageStore<T>(selector: (state: StorageState) => T) {
+  const store = useContext(StorageContext);
+  if (!store) {
+    throw new Error('Missing StorageContext.Provider');
+  }
+  return useStore(store, selector);
+}
+
+export const useStorage = () => useStorageStore(state => state.storage);
