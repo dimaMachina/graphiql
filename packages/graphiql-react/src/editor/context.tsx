@@ -16,7 +16,7 @@ import {
   useState,
 } from 'react';
 
-import { useStorageContext } from '../storage';
+import { useStorage } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
 import { STORAGE_KEY as STORAGE_KEY_HEADERS } from './header-editor';
 import { useSynchronizeValue } from './hooks';
@@ -262,7 +262,7 @@ export type EditorContextProviderProps = {
 };
 
 export function EditorContextProvider(props: EditorContextProviderProps) {
-  const storage = useStorageContext();
+  const storage = useStorage();
   const [headerEditor, setHeaderEditor] = useState<CodeMirrorEditor | null>(
     null,
   );
@@ -277,9 +277,9 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
   const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(
     () => {
-      const isStored = storage?.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
+      const isStored = storage.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
       return props.shouldPersistHeaders !== false && isStored
-        ? storage?.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
+        ? storage.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
         : Boolean(props.shouldPersistHeaders);
     },
   );
@@ -297,10 +297,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   // We store this in state but never update it. By passing a function we only
   // need to compute it lazily during the initial render.
   const [initialState] = useState(() => {
-    const query = props.query ?? storage?.get(STORAGE_KEY_QUERY) ?? null;
+    const query = props.query ?? storage.get(STORAGE_KEY_QUERY) ?? null;
     const variables =
-      props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
-    const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
+      props.variables ?? storage.get(STORAGE_KEY_VARIABLES) ?? null;
+    const headers = props.headers ?? storage.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';
 
     const tabState = getDefaultTabState({
@@ -332,15 +332,15 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const setShouldPersistHeaders = useCallback(
     (persist: boolean) => {
       if (persist) {
-        storage?.set(STORAGE_KEY_HEADERS, headerEditor?.getValue() ?? '');
+        storage.set(STORAGE_KEY_HEADERS, headerEditor?.getValue() ?? '');
         const serializedTabs = serializeTabState(tabState, true);
-        storage?.set(STORAGE_KEY_TABS, serializedTabs);
+        storage.set(STORAGE_KEY_TABS, serializedTabs);
       } else {
-        storage?.set(STORAGE_KEY_HEADERS, '');
+        storage.set(STORAGE_KEY_HEADERS, '');
         clearHeadersFromTabs(storage);
       }
       setShouldPersistHeadersInternal(persist);
-      storage?.set(PERSIST_HEADERS_STORAGE_KEY, persist.toString());
+      storage.set(PERSIST_HEADERS_STORAGE_KEY, persist.toString());
     },
     [storage, tabState, headerEditor],
   );
