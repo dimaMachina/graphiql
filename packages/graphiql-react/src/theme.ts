@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useStorageContext } from './storage';
+import { useStorage } from './storage';
 
 /**
  * The value `null` semantically means that the user does not explicitly choose
@@ -8,14 +8,10 @@ import { useStorageContext } from './storage';
 export type Theme = 'light' | 'dark' | null;
 
 export function useTheme(defaultTheme: Theme = null) {
-  const storageContext = useStorageContext();
+  const storage = useStorage();
 
   const [theme, setThemeInternal] = useState<Theme>(() => {
-    if (!storageContext) {
-      return null;
-    }
-
-    const stored = storageContext.get(STORAGE_KEY);
+    const stored = storage.get(STORAGE_KEY);
     switch (stored) {
       case 'light':
         return 'light';
@@ -24,7 +20,7 @@ export function useTheme(defaultTheme: Theme = null) {
       default:
         if (typeof stored === 'string') {
           // Remove the invalid stored value
-          storageContext.set(STORAGE_KEY, '');
+          storage.set(STORAGE_KEY, '');
         }
         return defaultTheme;
     }
@@ -43,10 +39,10 @@ export function useTheme(defaultTheme: Theme = null) {
 
   const setTheme = useCallback(
     (newTheme: Theme) => {
-      storageContext?.set(STORAGE_KEY, newTheme || '');
+      storage.set(STORAGE_KEY, newTheme || '');
       setThemeInternal(newTheme);
     },
-    [storageContext],
+    [storage],
   );
 
   return useMemo(() => ({ theme, setTheme }), [theme, setTheme]);

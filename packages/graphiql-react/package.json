@@ -61,13 +61,14 @@
     "get-value": "^3.0.1",
     "graphql-language-service": "^5.3.0",
     "markdown-it": "^14.1.0",
-    "set-value": "^4.1.0"
+    "set-value": "^4.1.0",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@babel/helper-string-parser": "^7.19.4",
     "@testing-library/react": "14.0.0",
-    "@types/markdown-it": "^14.1.2",
     "@types/get-value": "^3.0.5",
+    "@types/markdown-it": "^14.1.2",
     "@types/set-value": "^4.0.1",
     "@vitejs/plugin-react": "^4.3.1",
     "graphql": "^17.0.0-alpha.7",

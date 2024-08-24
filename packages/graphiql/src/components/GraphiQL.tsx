@@ -58,7 +58,7 @@ import {
   UseQueryEditorArgs,
   UseResponseEditorArgs,
   useSchemaContext,
-  useStorageContext,
+  useStorage,
   useTheme,
   UseVariableEditorArgs,
   VariableEditor,
@@ -245,7 +245,7 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
   const editorContext = useEditorContext({ nonNull: true });
   const executionContext = useExecutionContext({ nonNull: true });
   const schemaContext = useSchemaContext({ nonNull: true });
-  const storageContext = useStorageContext();
+  const storage = useStorage();
   const pluginContext = usePluginContext();
   const forcedTheme = useMemo(
     () =>
@@ -372,12 +372,12 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
 
   const handleClearData = useCallback(() => {
     try {
-      storageContext?.clear();
+      storage.clear();
       setClearStorageStatus('success');
     } catch {
       setClearStorageStatus('error');
     }
-  }, [storageContext]);
+  }, [storage]);
 
   const handlePersistHeaders: MouseEventHandler<HTMLButtonElement> =
     useCallback(
@@ -857,29 +857,25 @@ export function GraphiQLInterface(props: GraphiQLInterfaceProps) {
               </ButtonGroup>
             </div>
           )}
-          {storageContext ? (
-            <div className="graphiql-dialog-section">
-              <div>
-                <div className="graphiql-dialog-section-title">
-                  Clear storage
-                </div>
-                <div className="graphiql-dialog-section-caption">
-                  Remove all locally stored data and start fresh.
-                </div>
+          <div className="graphiql-dialog-section">
+            <div>
+              <div className="graphiql-dialog-section-title">Clear storage</div>
+              <div className="graphiql-dialog-section-caption">
+                Remove all locally stored data and start fresh.
               </div>
-              <Button
-                type="button"
-                state={clearStorageStatus || undefined}
-                disabled={clearStorageStatus === 'success'}
-                onClick={handleClearData}
-              >
-                {{
-                  success: 'Cleared data',
-                  error: 'Failed',
-                }[clearStorageStatus!] || 'Clear data'}
-              </Button>
             </div>
-          ) : null}
+            <Button
+              type="button"
+              state={clearStorageStatus || undefined}
+              disabled={clearStorageStatus === 'success'}
+              onClick={handleClearData}
+            >
+              {{
+                success: 'Cleared data',
+                error: 'Failed',
+              }[clearStorageStatus!] || 'Clear data'}
+            </Button>
+          </div>
         </Dialog>
       </div>
     </Tooltip.Provider>

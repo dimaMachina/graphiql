@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useExplorerContext } from '../explorer';
 import { usePluginContext } from '../plugin';
 import { useSchemaContext } from '../schema';
-import { useStorageContext } from '../storage';
+import { useStorage } from '../storage';
 import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
@@ -45,7 +45,7 @@ export function useChangeHandler(
   caller: Function,
 ) {
   const { updateActiveTabValues } = useEditorContext({ nonNull: true, caller });
-  const storage = useStorageContext();
+  const storage = useStorage();
 
   useEffect(() => {
     if (!editor) {
@@ -53,7 +53,7 @@ export function useChangeHandler(
     }
 
     const store = debounce(500, (value: string) => {
-      if (!storage || storageKey === null) {
+      if (storageKey === null) {
         return;
       }
       storage.set(storageKey, value);
